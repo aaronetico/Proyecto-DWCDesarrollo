@@ -28,7 +28,7 @@ function CategoryList() {
           </Link>
         ))}
       </div>
-    </section>
+    </section >
   )
 }
 
