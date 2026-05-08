@@ -11,8 +11,8 @@ function VersionList() {
     run(() => fetchVersionsByYear(yearId))
   }, [yearId, run])
 
-  if (loading || !versions) return <p>Cargando versiones...</p>
   if (error) return <p>Error al cargar versiones</p>
+  if (loading || !versions) return <p>Cargando versiones...</p>
 
   return (
     <section>

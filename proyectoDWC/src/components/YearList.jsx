@@ -11,8 +11,8 @@ function YearList() {
     run(() => fetchYearsByModel(modelId))
   }, [modelId, run])
 
-  if (loading || !years) return <p>Cargando años...</p>
   if (error) return <p>Error al cargar años</p>
+  if (loading || !years) return <p>Cargando años...</p>
 
   return (
     <section>

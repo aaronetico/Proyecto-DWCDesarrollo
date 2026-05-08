@@ -1,6 +1,9 @@
 import { cache } from './cache'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api'
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL?.trim() ||
+  (import.meta.env.PROD ? 'http://127.0.0.1:8150/api' : '/api')
+).replace(/\/$/, '')
 
 function getAuthToken() {
   return localStorage.getItem('authToken')

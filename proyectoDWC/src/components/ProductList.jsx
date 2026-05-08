@@ -6,7 +6,7 @@ import SearchForm from './SearchForm'
 
 function ProductList() {
   const { brandId, modelId, yearId, versionId } = useParams()
-  const { data: products, loading, run } = useAsync()
+  const { data: products, loading, error, run } = useAsync()
   const [allProducts, setAllProducts] = useState([]) // copia completa
 
   useEffect(() => {
@@ -32,6 +32,7 @@ function ProductList() {
     run(async () => filtered)
   }
 
+  if (error) return <p>Error al cargar productos</p>
   if (loading || !products) return <p>Cargando productos...</p>
 
   return (

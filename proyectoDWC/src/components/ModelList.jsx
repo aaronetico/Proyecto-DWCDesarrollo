@@ -11,8 +11,8 @@ function ModelList() {
     run(() => fetchModelsByBrand(brandId))
   }, [brandId, run])
 
-  if (loading || !models) return <p>Cargando modelos...</p>
   if (error) return <p>Error al cargar modelos</p>
+  if (loading || !models) return <p>Cargando modelos...</p>
 
   return (
     <section>
