@@ -1,16 +1,30 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { loginUser } from '../api/backendApi'
 
-function Login() {
+function Login({ isAuthenticated, onLoginSuccess }) {
   const navigate = useNavigate()
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  if (isAuthenticated) return <Navigate to="/" replace />
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Simulamos login: da igual lo que pongas
-    sessionStorage.setItem('fakeAuth', 'true')
-    navigate('/', { replace: true })
+    setError('')
+    setLoading(true)
+    try {
+      const { token, user } = await loginUser({ email, password })
+      localStorage.setItem('authToken', token)
+      onLoginSuccess(user)
+      navigate('/', { replace: true })
+    } catch (err) {
+      setError('No se pudo iniciar sesión. Revisa credenciales.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -19,10 +33,10 @@ function Login() {
         <h2>Iniciar sesión</h2>
 
         <input
-          type="text"
-          placeholder="Usuario"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
         <input
@@ -33,7 +47,14 @@ function Login() {
           required
         />
 
-        <button type="submit">Entrar</button>
+        {error && <p className="form-error">{error}</p>}
+
+        <button type="submit" disabled={loading}>
+          {loading ? 'Entrando...' : 'Entrar'}
+        </button>
+        <Link to="/register" className="secondary-btn link-button">
+          ¿Aún no tienes cuenta? Crea tu cuenta
+        </Link>
       </form>
     </div>
   )

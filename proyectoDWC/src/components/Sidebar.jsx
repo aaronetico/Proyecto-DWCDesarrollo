@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { fetchBrands } from '../api/fakeApi'
+import { fetchBrands } from '../api/backendApi'
 
 // Cache global para no volver a hacer fetch si ya lo tenemos
 let cachedBrands = null
@@ -33,7 +33,7 @@ function Sidebar() {
 
       <ul className="sidebar-brand-list">
         {brands.map(brand => {
-          const isActive = location.pathname === `/brand/${brand.id}`
+          const isActive = location.pathname.startsWith(`/brand/${brand.id}`)
           return (
             <li key={brand.id}>
               <Link

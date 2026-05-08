@@ -1,26 +1,22 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import useAsync from '../hooks/useAsync'
-import { fetchProducts } from '../api/fakeApi'
+import { fetchProductsByVersion } from '../api/backendApi'
 import SearchForm from './SearchForm'
 
 function ProductList() {
-  const { brandId, categoryId } = useParams()
+  const { brandId, modelId, yearId, versionId } = useParams()
   const { data: products, loading, run } = useAsync()
   const [allProducts, setAllProducts] = useState([]) // copia completa
 
-  // Carga inicial según la ruta
   useEffect(() => {
     run(() =>
-      fetchProducts({
-        brandId,
-        categoryId
-      }).then(data => {
+      fetchProductsByVersion(versionId).then(data => {
         setAllProducts(data) // guardamos la lista completa
         return data
       })
     )
-  }, [brandId, categoryId])
+  }, [versionId, run])
 
   // Filtrado por nombre (coincidencia en cualquier parte)
   function handleSearch(filters) {
@@ -41,7 +37,14 @@ function ProductList() {
   return (
     <section>
       <Link to="/" className="back-button">
-        ← Volver al inicio
+        ← Volver a marcas
+      </Link>
+
+      <Link
+        to={`/brand/${brandId}/model/${modelId}/year/${yearId}/versions`}
+        className="back-button back-button-inline"
+      >
+        ← Volver a versiones
       </Link>
 
       <h2>Productos</h2>
@@ -58,9 +61,8 @@ function ProductList() {
             to={`/product/${product.id}`}
             className="product-card"
           >
-            <img src={product.images[0]} alt={product.name} />
             <h4>{product.name}</h4>
-            <p>{product.price} €</p>
+            <p>{product.price.toFixed(2)} €</p>
           </Link>
         ))}
       </div>
