@@ -29,3 +29,5 @@ Frontend de tienda de piezas mecánicas integrado con API Laravel real.
 
 En local se puede usar proxy de Vite con `VITE_API_BASE_URL=/api`, pero en GitHub Pages no existe ese proxy.
 Para que el despliegue funcione, el frontend debe apuntar a una URL absoluta de backend (por ejemplo `http://127.0.0.1:8150/api` en tu equipo cuando tengas Laravel levantado).
+
+Si el backend no está disponible en producción, el catálogo público usa datos de respaldo para evitar que la app quede bloqueada en carga.

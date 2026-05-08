@@ -1,4 +1,12 @@
 import { cache } from './cache'
+import {
+  getFallbackBrands,
+  getFallbackModelsByBrand,
+  getFallbackPartById,
+  getFallbackPartsByVersion,
+  getFallbackVersionsByYear,
+  getFallbackYearsByModel,
+} from './publicCatalogFallback'
 
 const API_BASE_URL = (
   import.meta.env.VITE_API_BASE_URL?.trim() ||
@@ -79,6 +87,17 @@ function normalizeVersion(version) {
 }
 
 function normalizeProduct(product) {
+  if (!product) {
+    return {
+      id: null,
+      name: 'Pieza',
+      price: 0,
+      stock: 0,
+      description: 'Sin descripcion',
+      images: ['https://via.placeholder.com/300x300?text=Producto']
+    }
+  }
+
   const image = product.image_url ?? product.image ?? product.images?.[0] ?? 'https://via.placeholder.com/300x300?text=Producto'
 
   return {
@@ -105,11 +124,28 @@ function mapUser(user) {
   }
 }
 
+function shouldUseFallback(error) {
+  if (!import.meta.env.PROD) return false
+  if (!error?.message) return false
+  return (
+    error.message.includes('Failed to fetch') ||
+    error.message.includes('HTTP 404') ||
+    error.message.includes('ERR_NAME_NOT_RESOLVED') ||
+    error.message.includes('ERR_CONNECTION_REFUSED')
+  )
+}
+
 export async function fetchBrands() {
   if (cache.brands) return cache.brands
 
-  const payload = await requestFromCandidates(['/brands'])
-  const brands = normalizeCollection(payload).map(normalizeBrand)
+  let brands
+  try {
+    const payload = await requestFromCandidates(['/brands'])
+    brands = normalizeCollection(payload).map(normalizeBrand)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    brands = getFallbackBrands().map(normalizeBrand)
+  }
   cache.brands = brands
   return brands
 }
@@ -117,11 +153,17 @@ export async function fetchBrands() {
 export async function fetchModelsByBrand(brandId) {
   if (cache.modelsByBrand.has(brandId)) return cache.modelsByBrand.get(brandId)
 
-  const payload = await requestFromCandidates([
-    `/brands/${brandId}/models`,
-    `/models?brand_id=${brandId}`
-  ])
-  const models = normalizeCollection(payload).map(normalizeModel)
+  let models
+  try {
+    const payload = await requestFromCandidates([
+      `/brands/${brandId}/models`,
+      `/models?brand_id=${brandId}`
+    ])
+    models = normalizeCollection(payload).map(normalizeModel)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    models = getFallbackModelsByBrand(brandId).map(normalizeModel)
+  }
   cache.modelsByBrand.set(brandId, models)
   return models
 }
@@ -129,11 +171,17 @@ export async function fetchModelsByBrand(brandId) {
 export async function fetchYearsByModel(modelId) {
   if (cache.yearsByModel.has(modelId)) return cache.yearsByModel.get(modelId)
 
-  const payload = await requestFromCandidates([
-    `/models/${modelId}/years`,
-    `/years?model_id=${modelId}`
-  ])
-  const years = normalizeCollection(payload).map(normalizeYear)
+  let years
+  try {
+    const payload = await requestFromCandidates([
+      `/models/${modelId}/years`,
+      `/years?model_id=${modelId}`
+    ])
+    years = normalizeCollection(payload).map(normalizeYear)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    years = getFallbackYearsByModel(modelId).map(normalizeYear)
+  }
   cache.yearsByModel.set(modelId, years)
   return years
 }
@@ -141,11 +189,17 @@ export async function fetchYearsByModel(modelId) {
 export async function fetchVersionsByYear(yearId) {
   if (cache.versionsByYear.has(yearId)) return cache.versionsByYear.get(yearId)
 
-  const payload = await requestFromCandidates([
-    `/years/${yearId}/versions`,
-    `/versions?year_id=${yearId}`
-  ])
-  const versions = normalizeCollection(payload).map(normalizeVersion)
+  let versions
+  try {
+    const payload = await requestFromCandidates([
+      `/years/${yearId}/versions`,
+      `/versions?year_id=${yearId}`
+    ])
+    versions = normalizeCollection(payload).map(normalizeVersion)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    versions = getFallbackVersionsByYear(yearId).map(normalizeVersion)
+  }
   cache.versionsByYear.set(yearId, versions)
   return versions
 }
@@ -153,18 +207,24 @@ export async function fetchVersionsByYear(yearId) {
 export async function fetchProductsByVersion(versionId) {
   if (cache.productsByVersion.has(versionId)) return cache.productsByVersion.get(versionId)
 
-  const payload = await requestFromCandidates([
-    `/versions/${versionId}/parts`,
-    `/parts?car_version_id=${versionId}`,
-    `/parts`
-  ])
-  let products = normalizeCollection(payload)
+  let products
+  try {
+    const payload = await requestFromCandidates([
+      `/versions/${versionId}/parts`,
+      `/parts?car_version_id=${versionId}`,
+      `/parts`
+    ])
+    products = normalizeCollection(payload)
 
-  if (products.length > 0 && products[0]?.car_version_id !== undefined) {
-    products = products.filter(part => String(part.car_version_id) === String(versionId))
+    if (products.length > 0 && products[0]?.car_version_id !== undefined) {
+      products = products.filter(part => String(part.car_version_id) === String(versionId))
+    }
+
+    products = products.map(normalizeProduct)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    products = getFallbackPartsByVersion(versionId).map(normalizeProduct)
   }
-
-  products = products.map(normalizeProduct)
   cache.productsByVersion.set(versionId, products)
   return products
 }
@@ -172,8 +232,15 @@ export async function fetchProductsByVersion(versionId) {
 export async function fetchProductById(productId) {
   if (cache.productById.has(productId)) return cache.productById.get(productId)
 
-  const payload = await requestFromCandidates([`/parts/${productId}`])
-  const product = normalizeProduct(payload?.data ?? payload)
+  let product
+  try {
+    const payload = await requestFromCandidates([`/parts/${productId}`])
+    product = normalizeProduct(payload?.data ?? payload)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    const fallbackPart = getFallbackPartById(productId)
+    product = fallbackPart ? normalizeProduct(fallbackPart) : null
+  }
   cache.productById.set(productId, product)
   return product
 }
