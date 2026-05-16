@@ -76,6 +76,18 @@ function normalizeVersion(version) {
 }
 
 function normalizeProduct(product) {
+
+  if (!product) {
+    return {
+      id: null,
+      name: 'Pieza',
+      price: 0,
+      stock: 0,
+      description: 'Sin descripcion',
+      images: ['https://via.placeholder.com/300x300?text=Producto']
+    }
+  }
+
   const image = product.image_url ?? product.image ?? product.images?.[0] ?? 'https://via.placeholder.com/300x300?text=Producto'
 
   return {
