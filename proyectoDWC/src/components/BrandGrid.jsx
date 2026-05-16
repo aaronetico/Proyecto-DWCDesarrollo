@@ -13,6 +13,8 @@ function BrandGrid() {
  // Mientras carga o no tenemos marcas todavía → mostramos mensaje
  if (loading || !brands) return <p>Cargando marcas...</p>
   if (error) return <p>Error al cargar marcas</p>
+ // Mientras carga o no tenemos marcas todavía → mostramos mensaje
+if (loading || !brands) return <p>Cargando marcas...</p>
 
   return (
     <section>

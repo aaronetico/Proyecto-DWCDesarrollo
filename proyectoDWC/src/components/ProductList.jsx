@@ -32,6 +32,7 @@ function ProductList() {
     run(async () => filtered)
   }
 
+  if (error) return <p>Error al cargar productos</p>
   if (loading || !products) return <p>Cargando productos...</p>
 
   return (

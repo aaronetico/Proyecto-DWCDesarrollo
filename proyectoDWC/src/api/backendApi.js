@@ -76,6 +76,20 @@ function normalizeVersion(version) {
 }
 
 function normalizeProduct(product) {
+<<<<<<< HEAD
+=======
+  if (!product) {
+    return {
+      id: null,
+      name: 'Pieza',
+      price: 0,
+      stock: 0,
+      description: 'Sin descripcion',
+      images: ['https://via.placeholder.com/300x300?text=Producto']
+    }
+  }
+
+>>>>>>> e78e5fb495bf7b5de9d1a0c03e65525bd02bb748
   const image = product.image_url ?? product.image ?? product.images?.[0] ?? 'https://via.placeholder.com/300x300?text=Producto'
 
   return {
@@ -114,11 +128,25 @@ export async function fetchBrands() {
 export async function fetchModelsByBrand(brandId) {
   if (cache.modelsByBrand.has(brandId)) return cache.modelsByBrand.get(brandId)
 
+<<<<<<< HEAD
   const payload = await requestFromCandidates([
     `/brands/${brandId}/models`,
     `/models?brand_id=${brandId}`
   ])
   const models = normalizeCollection(payload).map(normalizeModel)
+=======
+  let models
+  try {
+    const payload = await requestFromCandidates([
+      `/brands/${brandId}/models`,
+      `/models?brand_id=${brandId}`
+    ])
+    models = normalizeCollection(payload).map(normalizeModel)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    models = getFallbackModelsByBrand(brandId).map(normalizeModel)
+  }
+>>>>>>> e78e5fb495bf7b5de9d1a0c03e65525bd02bb748
   cache.modelsByBrand.set(brandId, models)
   return models
 }
@@ -126,11 +154,25 @@ export async function fetchModelsByBrand(brandId) {
 export async function fetchYearsByModel(modelId) {
   if (cache.yearsByModel.has(modelId)) return cache.yearsByModel.get(modelId)
 
+<<<<<<< HEAD
   const payload = await requestFromCandidates([
     `/models/${modelId}/years`,
     `/years?model_id=${modelId}`
   ])
   const years = normalizeCollection(payload).map(normalizeYear)
+=======
+  let years
+  try {
+    const payload = await requestFromCandidates([
+      `/models/${modelId}/years`,
+      `/years?model_id=${modelId}`
+    ])
+    years = normalizeCollection(payload).map(normalizeYear)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    years = getFallbackYearsByModel(modelId).map(normalizeYear)
+  }
+>>>>>>> e78e5fb495bf7b5de9d1a0c03e65525bd02bb748
   cache.yearsByModel.set(modelId, years)
   return years
 }
@@ -138,11 +180,25 @@ export async function fetchYearsByModel(modelId) {
 export async function fetchVersionsByYear(yearId) {
   if (cache.versionsByYear.has(yearId)) return cache.versionsByYear.get(yearId)
 
+<<<<<<< HEAD
   const payload = await requestFromCandidates([
     `/years/${yearId}/versions`,
     `/versions?year_id=${yearId}`
   ])
   const versions = normalizeCollection(payload).map(normalizeVersion)
+=======
+  let versions
+  try {
+    const payload = await requestFromCandidates([
+      `/years/${yearId}/versions`,
+      `/versions?year_id=${yearId}`
+    ])
+    versions = normalizeCollection(payload).map(normalizeVersion)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    versions = getFallbackVersionsByYear(yearId).map(normalizeVersion)
+  }
+>>>>>>> e78e5fb495bf7b5de9d1a0c03e65525bd02bb748
   cache.versionsByYear.set(yearId, versions)
   return versions
 }
@@ -150,6 +206,7 @@ export async function fetchVersionsByYear(yearId) {
 export async function fetchProductsByVersion(versionId) {
   if (cache.productsByVersion.has(versionId)) return cache.productsByVersion.get(versionId)
 
+<<<<<<< HEAD
   const payload = await requestFromCandidates([
     `/versions/${versionId}/parts`,
     `/parts?car_version_id=${versionId}`,
@@ -162,6 +219,26 @@ export async function fetchProductsByVersion(versionId) {
   }
 
   products = products.map(normalizeProduct)
+=======
+  let products
+  try {
+    const payload = await requestFromCandidates([
+      `/versions/${versionId}/parts`,
+      `/parts?car_version_id=${versionId}`,
+      `/parts`
+    ])
+    products = normalizeCollection(payload)
+
+    if (products.length > 0 && products[0]?.car_version_id !== undefined) {
+      products = products.filter(part => String(part.car_version_id) === String(versionId))
+    }
+
+    products = products.map(normalizeProduct)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    products = getFallbackPartsByVersion(versionId).map(normalizeProduct)
+  }
+>>>>>>> e78e5fb495bf7b5de9d1a0c03e65525bd02bb748
   cache.productsByVersion.set(versionId, products)
   return products
 }
@@ -169,8 +246,20 @@ export async function fetchProductsByVersion(versionId) {
 export async function fetchProductById(productId) {
   if (cache.productById.has(productId)) return cache.productById.get(productId)
 
+<<<<<<< HEAD
   const payload = await requestFromCandidates([`/parts/${productId}`])
   const product = normalizeProduct(payload?.data ?? payload)
+=======
+  let product
+  try {
+    const payload = await requestFromCandidates([`/parts/${productId}`])
+    product = normalizeProduct(payload?.data ?? payload)
+  } catch (error) {
+    if (!shouldUseFallback(error)) throw error
+    const fallbackPart = getFallbackPartById(productId)
+    product = fallbackPart ? normalizeProduct(fallbackPart) : null
+  }
+>>>>>>> e78e5fb495bf7b5de9d1a0c03e65525bd02bb748
   cache.productById.set(productId, product)
   return product
 }
