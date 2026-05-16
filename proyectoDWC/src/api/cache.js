@@ -1,8 +1,8 @@
-// Cache simple en memoria
-// Evita repetir llamadas innecesarias a la fakeApi
 export const cache = {
   brands: null,
-  categories: null,
-  products: new Map(), 
+  modelsByBrand: new Map(),
+  yearsByModel: new Map(),
+  versionsByYear: new Map(),
+  productsByVersion: new Map(),
   productById: new Map()
 }

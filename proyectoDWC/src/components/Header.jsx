@@ -1,12 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom'
 
-function Header({ cart, clearCart }) {
+function Header({ cart, isAuthenticated, canOpenAdmin, onLogout }) {
   const navigate = useNavigate()
 
-  function handleLogout() {
-    sessionStorage.removeItem('fakeAuth')
-    clearCart()
-    navigate('/login', { replace: true })
+  function handleAuthClick() {
+    if (isAuthenticated) {
+      onLogout()
+      return
+    }
+    navigate('/login')
   }
 
   const totalItems = cart.reduce(
@@ -18,7 +20,7 @@ function Header({ cart, clearCart }) {
     <header className="header">
       <div className="header-left">
         <h1 className="logo">Falcar</h1>
-        <span className="subtitle">Piezas mecánicas profesionales</span>
+        <span className="subtitle">Piezas de recambio motor combustión interna</span>
       </div>
 
       <nav className="header-nav">
@@ -29,8 +31,11 @@ function Header({ cart, clearCart }) {
           🛒 ({totalItems})
         </Link>
 
-        <button onClick={handleLogout} className="logout-btn">
-          Cerrar sesión
+        {isAuthenticated && <Link to="/profile">Mi perfil</Link>}
+        {canOpenAdmin && <Link to="/admin">Gestión</Link>}
+
+        <button onClick={handleAuthClick} className="logout-btn">
+          {isAuthenticated ? 'Cerrar sesión' : 'Iniciar sesión'}
         </button>
       </nav>
     </header>

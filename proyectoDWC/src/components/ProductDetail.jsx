@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import useAsync from '../hooks/useAsync'
-import { fetchProductById } from '../api/fakeApi'
+import { fetchProductById } from '../api/backendApi'
 import ProductModel from '../models/ProductModel'
 
 function ProductDetail({ addToCart }) {
@@ -11,13 +11,13 @@ function ProductDetail({ addToCart }) {
 
   useEffect(() => {// Ejecutamos la llamada async para traer el producto
     run(() => fetchProductById(productId))
-  }, [productId])
+  }, [productId, run])
 
   if (loading) return <p>Cargando producto...</p>
   if (!product) return <p>Producto no encontrado</p>
 
   const productInstance = new ProductModel(product)
-// Detectamos si el stock es bajo y ayor que 0 y menor o igual que 5
+// Detectamos si el stock es bajo y Mayor que 0 y menor o igual que 5
   const hasLowStock = product.stock > 0 && product.stock <= 5
 
   return (
@@ -29,9 +29,9 @@ function ProductDetail({ addToCart }) {
 
         <h2>{product.name}</h2>
 
-        <img src={product.images[0]} alt={product.name} />
+        
 
-        <p><strong>Precio:</strong> {product.price} €</p>
+        <p><strong>Precio:</strong> {product.price.toFixed(2)} €</p>
         <p>
           <strong>Precio con IVA:</strong>{' '}
           {productInstance.getPriceWithVAT()} €

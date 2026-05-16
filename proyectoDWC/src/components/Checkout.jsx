@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function Checkout({ clearCart }) {
+function Checkout() {
   const navigate = useNavigate()
-  const [paid, setPaid] = useState(false)
   const [error, setError] = useState('')
 
   const [form, setForm] = useState({
@@ -26,6 +25,10 @@ function Checkout({ clearCart }) {
     return regex.test(cardNumber)
   }
 
+  function isValidPostalCode(postalCode) {
+    return /^\d{5}$/.test(postalCode)
+  }
+
   function handleSubmit(e) {
     e.preventDefault()
 
@@ -34,21 +37,16 @@ function Checkout({ clearCart }) {
       return
     }
 
-    clearCart() //Si le da al botón de pagar, se quitará el carrito.
-    setPaid(true) //Y cambiará la variable de serPaid que hará que se pinte los mensajes de volver a inicio.
+    if (!isValidPostalCode(form.postalCode)) {
+      setError('El código postal debe tener exactamente 5 números')
+      return
+    }
 
-    setTimeout(() => {
-      navigate('/')
-    }, 2000)
-  }
-
-  if (paid) {
-    return (
-      <section>
-        <h2>Pago realizado correctamente</h2>
-        <p>Gracias por tu compra. Volviendo al inicio…</p>
-      </section>
-    )
+    navigate('/checkout/summary', {
+      state: {
+        shippingData: form
+      }
+    })
   }
 
   return (
@@ -110,6 +108,9 @@ function Checkout({ clearCart }) {
           placeholder="Código postal"
           value={form.postalCode}
           onChange={handleChange}
+          inputMode="numeric"
+          pattern="[0-9]{5}"
+          maxLength={5}
           required
         />
 

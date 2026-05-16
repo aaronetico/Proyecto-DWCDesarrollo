@@ -1,0 +1,18 @@
+# Blueprint para el front estático (Vite + React).
+# Tras desplegar el backend, define VITE_API_BASE_URL con la URL pública del API,
+# por ejemplo: https://dwc-laravel-api.onrender.com/api
+services:
+  - type: web
+    name: dwc-react-frontend
+    runtime: static
+    buildCommand: cd proyectoDWC && npm ci && npm run build
+    staticPublishPath: ./proyectoDWC/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: VITE_API_BASE_URL
+        sync: false
