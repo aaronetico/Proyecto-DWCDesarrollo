@@ -76,8 +76,7 @@ function normalizeVersion(version) {
 }
 
 function normalizeProduct(product) {
-<<<<<<< HEAD
-=======
+
   if (!product) {
     return {
       id: null,
