@@ -63,7 +63,7 @@ function ProductList() {
             className="product-card"
           >
             <h4>{product.name}</h4>
-            <p>{product.price.toFixed(2)} €</p>
+            <p>{Number(product.price ?? 0).toFixed(2)} €</p>
           </Link>
         ))}
       </div>
