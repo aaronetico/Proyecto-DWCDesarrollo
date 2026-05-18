@@ -6,7 +6,7 @@ import SearchForm from './SearchForm'
 
 function ProductList() {
   const { brandId, modelId, yearId, versionId } = useParams()
-  const { data: products, loading, run } = useAsync()
+  const { data: products, loading, error, run } = useAsync()
   const [allProducts, setAllProducts] = useState([]) // copia completa
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function ProductList() {
 
     // Filtramos todos los productos cuyo nombre contenga el texto escrito en cualquier lugar
     const filtered = allProducts.filter(product =>
-      product.name.toLowerCase().includes(query)
+      (product.name ?? '').toLowerCase().includes(query)
     )
 
     run(async () => filtered)
