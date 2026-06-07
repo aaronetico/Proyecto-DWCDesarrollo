@@ -2,30 +2,41 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import useAsync from '../hooks/useAsync'
 import { fetchProductsByVersion } from '../api/backendApi'
+import { CATALOG_UPDATED_EVENT } from '../api/cache'
 import SearchForm from './SearchForm'
 
 function ProductList() {
   const { brandId, modelId, yearId, versionId } = useParams()
   const { data: products, loading, error, run } = useAsync()
-  const [allProducts, setAllProducts] = useState([]) // copia completa
+  const [allProducts, setAllProducts] = useState([])
 
-  useEffect(() => {
+  function loadProducts() {
     run(() =>
-      fetchProductsByVersion(versionId).then(data => {
-        setAllProducts(data) // guardamos la lista completa
+      fetchProductsByVersion(versionId).then((data) => {
+        setAllProducts(data)
         return data
       })
     )
+  }
+
+  useEffect(() => {
+    loadProducts()
   }, [versionId, run])
 
-  // Filtrado por nombre (coincidencia en cualquier parte)
+  useEffect(() => {
+    function handleCatalogUpdate() {
+      loadProducts()
+    }
+
+    window.addEventListener(CATALOG_UPDATED_EVENT, handleCatalogUpdate)
+    return () => window.removeEventListener(CATALOG_UPDATED_EVENT, handleCatalogUpdate)
+  }, [versionId, run])
+
   function handleSearch(filters) {
     if (!allProducts) return
 
     const query = filters.name.trim().toLowerCase()
-
-    // Filtramos todos los productos cuyo nombre contenga el texto escrito en cualquier lugar
-    const filtered = allProducts.filter(product =>
+    const filtered = allProducts.filter((product) =>
       (product.name ?? '').toLowerCase().includes(query)
     )
 
@@ -56,12 +67,13 @@ function ProductList() {
       <div className="product-grid">
         {products.length === 0 && <p>No hay resultados</p>}
 
-        {products.map(product => (
+        {products.map((product) => (
           <Link
             key={product.id}
             to={`/product/${product.id}`}
             className="product-card"
           >
+            <img src={product.images?.[0]} alt={product.name} loading="lazy" />
             <h4>{product.name}</h4>
             <p>{Number(product.price ?? 0).toFixed(2)} €</p>
           </Link>

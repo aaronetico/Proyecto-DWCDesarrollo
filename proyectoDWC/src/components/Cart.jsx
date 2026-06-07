@@ -1,51 +1,52 @@
 import { useNavigate } from 'react-router-dom'
+import CheckoutSteps from './checkout/CheckoutSteps'
 
 function Cart({ cart, removeFromCart }) {
   const navigate = useNavigate()
 
-  const total = cart.reduce( //Reduce recorre un array, y te devuelve 1 número.
-    (sum, item) => sum + item.price * item.quantity, //Para calcular el número final de lo que cuesta todo lo que tienes en el carrito.
-    0                                                //Suma lo que ya haya de antes, con la multiplicación del precio por cantidad.
-  )                                                   //ej 5 piezas de 20 euros cada una --> 5 x 20.
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  )
 
   return (
-    <section>
-      <button className="back-btn" onClick={() => navigate(-1)}>
-        ← Volver atrás
-      </button>
-
+    <section className="checkout-page">
+      <CheckoutSteps currentStep={1} />
       <h2>Carrito</h2>
 
       {cart.length === 0 ? (
         <>
           <p>Tu carrito está vacío</p>
-
-          <button
-            className="secondary-btn"
-            onClick={() => navigate('/')}
-          >
+          <button className="secondary-btn" onClick={() => navigate('/')}>
             Volver a la tienda
           </button>
         </>
       ) : (
         <>
-          {cart.map(item => (
-            <div key={item.id} className="cart-item">
-              <h4>{item.name}</h4>
-              <p>{item.price} €</p>
-              <p>Cantidad: {item.quantity}</p>
+          <div className="checkout-summary-list">
+            {cart.map((item) => (
+              <div key={item.id} className="cart-item checkout-cart-item">
+                <div>
+                  <h4>{item.name}</h4>
+                  <p>{item.price.toFixed(2)} € · Cantidad: {item.quantity}</p>
+                </div>
+                <div className="cart-item-actions">
+                  <strong>{(item.price * item.quantity).toFixed(2)} €</strong>
+                  <button onClick={() => removeFromCart(item.id)}>Eliminar</button>
+                </div>
+              </div>
+            ))}
+          </div>
 
-              <button onClick={() => removeFromCart(item.id)}>
-                Eliminar
-              </button>
-            </div>
-          ))}
+          <div className="checkout-total-box">
+            <span>Total</span>
+            <strong>{total.toFixed(2)} €</strong>
+          </div>
 
-          <h3>Total: {total.toFixed(2)} €</h3>
-
-          <button onClick={() => navigate('/checkout')}>
-            Pagar
-          </button>
+          <div className="checkout-actions">
+            <button className="secondary-btn" onClick={() => navigate('/')}>Seguir comprando</button>
+            <button onClick={() => navigate('/checkout/shipping')}>Continuar con el pedido</button>
+          </div>
         </>
       )}
     </section>

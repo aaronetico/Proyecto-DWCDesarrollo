@@ -19,8 +19,13 @@ function Header({ cart, isAuthenticated, canOpenAdmin, onLogout }) {
   return (
     <header className="header">
       <div className="header-left">
-        <h1 className="logo">Falcar</h1>
-        <span className="subtitle">Piezas de recambio motor combustión interna</span>
+        <Link to="/" className="logo-link">
+          <img src="/assets/logobueno.png" alt="Logo Falcar" className="logo-image" />
+          <div className="logo-text-group">
+            <h1 className="logo">Falcar</h1>
+            <span className="subtitle">Piezas de recambio motor combustión interna</span>
+          </div>
+        </Link>
       </div>
 
       <nav className="header-nav">

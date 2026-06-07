@@ -1,4 +1,4 @@
-import { cache } from './cache'
+import { cache, clearCatalogCache } from './cache'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api'
 
@@ -118,7 +118,7 @@ export async function fetchBrands() {
   if (cache.brands) return cache.brands
 
   const payload = await requestFromCandidates(['/brands'])
-  const brands = normalizeCollection(payload).map(normalizeBrand)
+  const brands = normalizeCollection(payload).map(normalizeBrand).sort((a, b) => Number(a.id) - Number(b.id))
   cache.brands = brands
   return brands
 }
@@ -228,25 +228,33 @@ export async function updateMe(data) {
 
 export async function fetchAllBrands() {
   const payload = await requestJson(`${API_BASE_URL}/brands`)
-  return normalizeCollection(payload).map(normalizeBrand)
+  return normalizeCollection(payload)
+    .map(normalizeBrand)
+    .sort((a, b) => Number(a.id) - Number(b.id))
 }
 
 export async function createBrand(data) {
-  return requestJson(`${API_BASE_URL}/brands`, {
+  const result = await requestJson(`${API_BASE_URL}/brands`, {
     method: 'POST',
     body: JSON.stringify(data),
   })
+  clearCatalogCache('brands')
+  return result
 }
 
 export async function updateBrand(id, data) {
-  return requestJson(`${API_BASE_URL}/brands/${id}`, {
+  const result = await requestJson(`${API_BASE_URL}/brands/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   })
+  clearCatalogCache('brands')
+  return result
 }
 
 export async function deleteBrand(id) {
-  return requestJson(`${API_BASE_URL}/brands/${id}`, { method: 'DELETE' })
+  const result = await requestJson(`${API_BASE_URL}/brands/${id}`, { method: 'DELETE' })
+  clearCatalogCache('all')
+  return result
 }
 
 export async function fetchAllModels() {
@@ -259,21 +267,27 @@ export async function fetchAllModels() {
 }
 
 export async function createModel(data) {
-  return requestJson(`${API_BASE_URL}/models`, {
+  const result = await requestJson(`${API_BASE_URL}/models`, {
     method: 'POST',
     body: JSON.stringify(data),
   })
+  clearCatalogCache('models')
+  return result
 }
 
 export async function updateModel(id, data) {
-  return requestJson(`${API_BASE_URL}/models/${id}`, {
+  const result = await requestJson(`${API_BASE_URL}/models/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   })
+  clearCatalogCache('models')
+  return result
 }
 
 export async function deleteModel(id) {
-  return requestJson(`${API_BASE_URL}/models/${id}`, { method: 'DELETE' })
+  const result = await requestJson(`${API_BASE_URL}/models/${id}`, { method: 'DELETE' })
+  clearCatalogCache('all')
+  return result
 }
 
 export async function fetchAllYears() {
@@ -286,21 +300,27 @@ export async function fetchAllYears() {
 }
 
 export async function createYear(data) {
-  return requestJson(`${API_BASE_URL}/years`, {
+  const result = await requestJson(`${API_BASE_URL}/years`, {
     method: 'POST',
     body: JSON.stringify(data),
   })
+  clearCatalogCache('years')
+  return result
 }
 
 export async function updateYear(id, data) {
-  return requestJson(`${API_BASE_URL}/years/${id}`, {
+  const result = await requestJson(`${API_BASE_URL}/years/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   })
+  clearCatalogCache('years')
+  return result
 }
 
 export async function deleteYear(id) {
-  return requestJson(`${API_BASE_URL}/years/${id}`, { method: 'DELETE' })
+  const result = await requestJson(`${API_BASE_URL}/years/${id}`, { method: 'DELETE' })
+  clearCatalogCache('all')
+  return result
 }
 
 export async function fetchAllVersions() {
@@ -313,21 +333,27 @@ export async function fetchAllVersions() {
 }
 
 export async function createVersion(data) {
-  return requestJson(`${API_BASE_URL}/versions`, {
+  const result = await requestJson(`${API_BASE_URL}/versions`, {
     method: 'POST',
     body: JSON.stringify(data),
   })
+  clearCatalogCache('versions')
+  return result
 }
 
 export async function updateVersion(id, data) {
-  return requestJson(`${API_BASE_URL}/versions/${id}`, {
+  const result = await requestJson(`${API_BASE_URL}/versions/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   })
+  clearCatalogCache('versions')
+  return result
 }
 
 export async function deleteVersion(id) {
-  return requestJson(`${API_BASE_URL}/versions/${id}`, { method: 'DELETE' })
+  const result = await requestJson(`${API_BASE_URL}/versions/${id}`, { method: 'DELETE' })
+  clearCatalogCache('all')
+  return result
 }
 
 export async function fetchAllParts() {
@@ -346,19 +372,25 @@ export async function fetchAllParts() {
 }
 
 export async function createPart(data) {
-  return requestJson(`${API_BASE_URL}/parts`, {
+  const result = await requestJson(`${API_BASE_URL}/parts`, {
     method: 'POST',
     body: JSON.stringify(data),
   })
+  clearCatalogCache('parts')
+  return result
 }
 
 export async function updatePart(id, data) {
-  return requestJson(`${API_BASE_URL}/parts/${id}`, {
+  const result = await requestJson(`${API_BASE_URL}/parts/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   })
+  clearCatalogCache('parts')
+  return result
 }
 
 export async function deletePart(id) {
-  return requestJson(`${API_BASE_URL}/parts/${id}`, { method: 'DELETE' })
+  const result = await requestJson(`${API_BASE_URL}/parts/${id}`, { method: 'DELETE' })
+  clearCatalogCache('parts')
+  return result
 }

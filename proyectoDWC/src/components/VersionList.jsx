@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import useAsync from '../hooks/useAsync'
 import { fetchVersionsByYear } from '../api/backendApi'
+import { CATALOG_UPDATED_EVENT } from '../api/cache'
 
 function VersionList() {
   const { brandId, modelId, yearId } = useParams()
@@ -9,6 +10,15 @@ function VersionList() {
 
   useEffect(() => {
     run(() => fetchVersionsByYear(yearId))
+  }, [yearId, run])
+
+  useEffect(() => {
+    function handleCatalogUpdate() {
+      run(() => fetchVersionsByYear(yearId))
+    }
+
+    window.addEventListener(CATALOG_UPDATED_EVENT, handleCatalogUpdate)
+    return () => window.removeEventListener(CATALOG_UPDATED_EVENT, handleCatalogUpdate)
   }, [yearId, run])
 
   if (loading || !versions) return <p>Cargando versiones...</p>

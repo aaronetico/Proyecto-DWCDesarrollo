@@ -1,29 +1,33 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { fetchBrands } from '../api/backendApi'
-
-// Cache global para no volver a hacer fetch si ya lo tenemos
-let cachedBrands = null
+import { CATALOG_UPDATED_EVENT } from '../api/cache'
 
 function Sidebar() {
   const location = useLocation()
-  const [brands, setBrands] = useState(cachedBrands || [])
-  const [loading, setLoading] = useState(!cachedBrands)
+  const [brands, setBrands] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const loadBrands = useCallback(() => {
+    setLoading(true)
+    fetchBrands()
+      .then((data) => setBrands(data))
+      .catch((err) => console.error('Error cargando marcas:', err))
+      .finally(() => setLoading(false))
+  }, [])
 
   useEffect(() => {
-    if (!cachedBrands) {
-      setLoading(true)
-      fetchBrands()
-        .then(data => {
-          cachedBrands = data
-          setBrands(data)
-        })
-        .catch(err => {
-          console.error('Error cargando marcas:', err)
-        })
-        .finally(() => setLoading(false))
+    loadBrands()
+  }, [loadBrands])
+
+  useEffect(() => {
+    function handleCatalogUpdate() {
+      loadBrands()
     }
-  }, [])
+
+    window.addEventListener(CATALOG_UPDATED_EVENT, handleCatalogUpdate)
+    return () => window.removeEventListener(CATALOG_UPDATED_EVENT, handleCatalogUpdate)
+  }, [loadBrands])
 
   return (
     <aside className="sidebar">
@@ -32,7 +36,7 @@ function Sidebar() {
       {loading && <p>Cargando marcas...</p>}
 
       <ul className="sidebar-brand-list">
-        {brands.map(brand => {
+        {brands.map((brand) => {
           const isActive = location.pathname.startsWith(`/brand/${brand.id}`)
           return (
             <li key={brand.id}>
@@ -53,12 +57,11 @@ function Sidebar() {
         <h3>Contacto</h3>
         <p><strong>Email:</strong> ventas@falcar.com</p>
         <p><strong>Teléfono:</strong> +34 600 123 456</p>
-        <p><strong>Dirección:</strong> Calle Ficticia 123, 28080 Madrid, España</p>
+        <p><strong>Dirección:</strong> Av. de la Industria 42, 03008 Alicante</p>
         <p><strong>Horario:</strong> Lunes a Viernes, 9:00 - 18:00</p>
-        <p><strong>Redes:</strong> 
-          <a href="#" className="contact-link">Facebook</a> | 
-          <a href="#" className="contact-link">Instagram</a> | 
-          <a href="#" className="contact-link">Twitter</a>
+        <p><strong>Redes:</strong>
+          <a href="#" className="contact-link">Instagram</a> |
+          <a href="#" className="contact-link">LinkedIn</a>
         </p>
       </div>
     </aside>

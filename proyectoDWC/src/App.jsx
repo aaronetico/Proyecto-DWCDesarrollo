@@ -15,10 +15,13 @@ import NotFound from './components/NotFound'
 import Login from './components/Login'
 import Register from './components/Register'
 import Cart from './components/Cart'
-import Checkout from './components/Checkout'
-import CheckoutSummary from './components/CheckoutSummary'
+import CheckoutShipping from './components/checkout/CheckoutShipping'
+import CheckoutPaymentMethod from './components/checkout/CheckoutPaymentMethod'
+import CheckoutPaymentDetails from './components/checkout/CheckoutPaymentDetails'
+import CheckoutReview from './components/checkout/CheckoutReview'
 import Profile from './components/Profile'
 import AdminPanel from './components/AdminPanel'
+import { CheckoutProvider } from './context/CheckoutContext'
 import { fetchMe, logoutUser } from './api/backendApi'
 
 function App() {
@@ -97,87 +100,84 @@ function App() {
   }
 
   return (
-    <div className="app-root">
-      <Header
-        cart={cart}
-        isAuthenticated={isAuthenticated}
-        canOpenAdmin={isAdmin || isEmployee}
-        onLogout={handleLogout}
-      />
+    <CheckoutProvider>
+      <div className="app-root">
+        <Header
+          cart={cart}
+          isAuthenticated={isAuthenticated}
+          canOpenAdmin={isAdmin || isEmployee}
+          onLogout={handleLogout}
+        />
 
-      <div className="container">
-        <Sidebar />
+        <div className="container">
+          <Sidebar />
 
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<BrandGrid />} />
-            <Route path="/brand/:brandId" element={<ModelList />} />
-            <Route path="/brand/:brandId/model/:modelId/years" element={<YearList />} />
-            <Route
-              path="/brand/:brandId/model/:modelId/year/:yearId/versions"
-              element={<VersionList />}
-            />
-            <Route
-              path="/brand/:brandId/model/:modelId/year/:yearId/version/:versionId/products"
-              element={<ProductList />}
-            />
-            <Route
-              path="/product/:productId"
-              element={<ProductDetail addToCart={addToCart} />}
-            />
-            <Route
-              path="/cart"
-              element={
-                <Cart
-                  cart={cart}
-                  removeFromCart={removeFromCart}
-                />
-              }
-            />
-            <Route
-              path="/checkout"
-              element={<Checkout />}
-            />
-            <Route
-              path="/checkout/summary"
-              element={<CheckoutSummary cart={cart} clearCart={clearCart} />}
-            />
-            <Route
-              path="/login"
-              element={<NotFound />}
-            />
-            <Route
-              path="/register"
-              element={<NotFound />}
-            />
-            <Route
-              path="/profile"
-              element={
-                <Profile
-                  isAuthenticated={isAuthenticated}
-                  user={authUser}
-                  onProfileUpdated={setAuthUser}
-                />
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <AdminPanel
-                  isAuthenticated={isAuthenticated}
-                  canManageStructure={isAdmin}
-                  canManageParts={isAdmin || isEmployee}
-                />
-              }
-            />
-            <Route path="/about" element={<About />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<BrandGrid />} />
+              <Route path="/brand/:brandId" element={<ModelList />} />
+              <Route path="/brand/:brandId/model/:modelId/years" element={<YearList />} />
+              <Route
+                path="/brand/:brandId/model/:modelId/year/:yearId/versions"
+                element={<VersionList />}
+              />
+              <Route
+                path="/brand/:brandId/model/:modelId/year/:yearId/version/:versionId/products"
+                element={<ProductList />}
+              />
+              <Route
+                path="/product/:productId"
+                element={<ProductDetail addToCart={addToCart} />}
+              />
+              <Route
+                path="/cart"
+                element={
+                  <Cart
+                    cart={cart}
+                    removeFromCart={removeFromCart}
+                  />
+                }
+              />
+              <Route path="/checkout/shipping" element={<CheckoutShipping />} />
+              <Route path="/checkout/payment-method" element={<CheckoutPaymentMethod />} />
+              <Route path="/checkout/payment-details" element={<CheckoutPaymentDetails />} />
+              <Route
+                path="/checkout/review"
+                element={<CheckoutReview cart={cart} clearCart={clearCart} />}
+              />
+              <Route path="/checkout" element={<CheckoutShipping />} />
+              <Route path="/checkout/summary" element={<CheckoutReview cart={cart} clearCart={clearCart} />} />
+              <Route path="/login" element={<NotFound />} />
+              <Route path="/register" element={<NotFound />} />
+              <Route
+                path="/profile"
+                element={
+                  <Profile
+                    isAuthenticated={isAuthenticated}
+                    user={authUser}
+                    onProfileUpdated={setAuthUser}
+                  />
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <AdminPanel
+                    isAuthenticated={isAuthenticated}
+                    canManageStructure={isAdmin}
+                    canManageParts={isAdmin || isEmployee}
+                  />
+                }
+              />
+              <Route path="/about" element={<About />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+        </div>
+
+        <Footer />
       </div>
-
-      <Footer />
-    </div>
+    </CheckoutProvider>
   )
 }
 
