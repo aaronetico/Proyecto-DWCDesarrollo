@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { loginUser } from '../api/backendApi'
 
+// Formulario de acceso que guarda el token en localStorage
 function Login({ isAuthenticated, onLoginSuccess }) {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')

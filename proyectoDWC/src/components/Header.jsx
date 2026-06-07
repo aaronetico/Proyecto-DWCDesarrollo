@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 
+// Cabecera con logo, navegación y contador del carrito
 function Header({ cart, isAuthenticated, canOpenAdmin, onLogout }) {
   const navigate = useNavigate()
 

@@ -23,6 +23,7 @@ import {
   updateYear,
 } from '../api/backendApi'
 
+// Panel CRUD del catalogo segun permisos de admin o empleado
 function sortById(items) {
   return [...items].sort((a, b) => Number(a.id) - Number(b.id))
 }

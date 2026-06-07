@@ -4,6 +4,7 @@ import useAsync from '../hooks/useAsync'
 import { fetchBrands, fetchModelsByBrand } from '../api/backendApi'
 import { CATALOG_UPDATED_EVENT } from '../api/cache'
 
+// Pagina de inicio con rejilla de marcas disponibles
 function BrandGrid() {
   const { data: brands, loading, error, run } = useAsync()
 

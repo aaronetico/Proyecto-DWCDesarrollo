@@ -1,5 +1,6 @@
 name: Deploy to GitHub Pages
 
+# Se ejecuta al hacer push a main o manualmente desde Actions
 on:
   push:
     branches: ["main"]
@@ -35,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run build  # Genera la carpeta dist del front
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -51,4 +52,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v4  # Publica el front en GitHub Pages

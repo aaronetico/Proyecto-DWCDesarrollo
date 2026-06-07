@@ -24,6 +24,7 @@ import AdminPanel from './components/AdminPanel'
 import { CheckoutProvider } from './context/CheckoutContext'
 import { fetchMe, logoutUser } from './api/backendApi'
 
+// Componente raíz: gestiona rutas, sesión y carrito
 function App() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -35,6 +36,7 @@ function App() {
   const isAdmin = roles.includes('admin')
   const isEmployee = roles.includes('empleado')
 
+  // Añade una pieza al carrito o suma una unidad si ya existe
   function addToCart(product) {
     setCart(prev => {
       const existing = prev.find(p => p.id === product.id)
@@ -73,6 +75,7 @@ function App() {
     }
   }
 
+  // Cierra sesión en la API y limpia el estado local
   async function handleLogout() {
     try {
       await logoutUser()

@@ -1,18 +1,17 @@
-# Blueprint para el front estático (Vite + React).
-# Tras desplegar el backend, define VITE_API_BASE_URL con la URL pública del API,
-# por ejemplo: https://dwc-laravel-api.onrender.com/api
+# Blueprint Render: despliega el front React (Vite) como sitio estático
+# Tras desplegar el backend, define VITE_API_BASE_URL con la URL pública del API
 services:
   - type: web
     name: dwc-react-frontend
     runtime: static
-    buildCommand: cd proyectoDWC && npm ci && npm run build
-    staticPublishPath: ./proyectoDWC/dist
+    buildCommand: cd proyectoDWC && npm ci && npm run build  # Compila Vite a dist/
+    staticPublishPath: ./proyectoDWC/dist  # Carpeta que sirve Render
     routes:
       - type: rewrite
         source: /*
-        destination: /index.html
+        destination: /index.html  # SPA: todas las rutas van al index
     envVars:
       - key: NODE_VERSION
         value: "20"
       - key: VITE_API_BASE_URL
-        sync: false
+        sync: false  # Ejemplo: https://dwc-laravel-api.onrender.com/api

@@ -5,6 +5,7 @@ import { fetchProductById } from '../api/backendApi'
 import { CATALOG_UPDATED_EVENT } from '../api/cache'
 import ProductModel from '../models/ProductModel'
 
+// Ficha detallada de una pieza con precio, stock y descripción
 function ProductDetail({ addToCart }) {
   const { productId } = useParams()
   const navigate = useNavigate()

@@ -1,7 +1,9 @@
 import { cache, clearCatalogCache } from './cache'
 
+// URL base de la API Laravel (proxy local o Render en producción)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api'
 
+// Lee el token guardado en el navegador
 function getAuthToken() {
   return localStorage.getItem('authToken')
 }

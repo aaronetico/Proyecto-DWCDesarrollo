@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo, useState } from 'react'
 
 const CheckoutContext = createContext(null)
 
+// Datos por defecto del formulario de envío
 const defaultShipping = {
   name: '',
   email: '',
@@ -36,6 +37,7 @@ export function CheckoutProvider({ children }) {
   const [paymentMethod, setPaymentMethod] = useState('')
   const [paymentDetails, setPaymentDetails] = useState(defaultPaymentDetails)
 
+  // Comparte el estado del checkout entre los pasos del formulario
   const value = useMemo(() => ({
     shipping,
     setShipping,

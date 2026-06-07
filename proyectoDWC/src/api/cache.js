@@ -7,8 +7,10 @@ export const cache = {
   productById: new Map(),
 }
 
+// Evento que avisa a la UI cuando cambia el catálogo
 export const CATALOG_UPDATED_EVENT = 'falcar:catalog-updated'
 
+// Limpia la caché del front cuando el admin modifica datos
 export function clearCatalogCache(scope = 'all') {
   if (scope === 'all' || scope === 'brands') {
     cache.brands = null

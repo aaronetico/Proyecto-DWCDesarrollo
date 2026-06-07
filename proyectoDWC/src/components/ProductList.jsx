@@ -5,6 +5,7 @@ import { fetchProductsByVersion } from '../api/backendApi'
 import { CATALOG_UPDATED_EVENT } from '../api/cache'
 import SearchForm from './SearchForm'
 
+// Lista de piezas filtrables de una version concreta
 function ProductList() {
   const { brandId, modelId, yearId, versionId } = useParams()
   const { data: products, loading, error, run } = useAsync()

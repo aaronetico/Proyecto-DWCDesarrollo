@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { fetchBrands } from '../api/backendApi'
 import { CATALOG_UPDATED_EVENT } from '../api/cache'
 
+// Barra lateral con marcas y datos de contacto
 function Sidebar() {
   const location = useLocation()
   const [brands, setBrands] = useState([])
@@ -61,7 +62,8 @@ function Sidebar() {
         <p><strong>Horario:</strong> Lunes a Viernes, 9:00 - 18:00</p>
         <p><strong>Redes:</strong>
           <a href="#" className="contact-link">Instagram</a> |
-          <a href="#" className="contact-link">LinkedIn</a>
+          <a href="#" className="contact-link">Twitter</a> |
+          <a href="#" className="contact-link">Facebook</a>
         </p>
       </div>
     </aside>
