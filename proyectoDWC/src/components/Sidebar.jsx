@@ -58,7 +58,7 @@ function Sidebar() {
         <h3>Contacto</h3>
         <p><strong>Email:</strong> ventas@falcar.com</p>
         <p><strong>Teléfono:</strong> +34 600 123 456</p>
-        <p><strong>Dirección:</strong> Av. de la Industria 42, 03008 Alicante</p>
+        <p><strong>Dirección:</strong> Av. de la Industria 42, 03008 Elda Alicante</p>
         <p><strong>Horario:</strong> Lunes a Viernes, 9:00 - 18:00</p>
         <p><strong>Redes:</strong>
           <a href="#" className="contact-link">Instagram</a> |
