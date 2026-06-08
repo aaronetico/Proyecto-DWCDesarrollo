@@ -74,7 +74,7 @@ function ProductList() {
             to={`/product/${product.id}`}
             className="product-card"
           >
-            <img src={product.images?.[0]} alt={product.name} loading="lazy" />
+            <img src={"/assets/parts/signo-interrogacion.avif"} alt={product.name} loading="lazy" />
             <h4>{product.name}</h4>
             <p>{Number(product.price ?? 0).toFixed(2)} €</p>
           </Link>
