@@ -43,7 +43,7 @@ function ProductDetail({ addToCart }) {
 
       <div className="product-detail-hero">
         <div className="product-detail-media">
-          <img src={imageUrl} alt={product.name} className="product-detail-image" />
+          <img src={"/assets/parts/signo-interrogacion.avif"} alt={product.name} className="product-detail-image" />
           <div className="product-detail-badges">
             <span className="product-badge">Pieza verificada</span>
             <span className="product-badge">Motor JDM / OEM</span>
