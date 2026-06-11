@@ -52,7 +52,7 @@ function ProductDetail({ addToCart }) {
 
         <div className="product-detail-main">
           <p className="product-detail-kicker">Recambio de motor especializado</p>
-          <h2>{product.name}</h2>
+          <h2>{"Inyector X-56 (solenoide) adaptable"}</h2>
 
           <div className="product-detail-price-box">
             <div>

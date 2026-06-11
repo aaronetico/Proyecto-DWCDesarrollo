@@ -20,20 +20,29 @@ function CheckoutShipping() {
   function handleSubmit(event) {
     event.preventDefault()
 
-    if (!/^\d{5}$/.test(shipping.postalCode)) {
-      setError('El código postal debe tener 5 dígitos')
+  if (!/^\d{5}$/.test(shipping.postalCode)) {
+    setError('El código postal debe tener 5 dígitos')
+    return
+  }
+
+  if (!/^\d{8,15}$/.test(shipping.phone)) {
+    setError('El teléfono debe tener entre 8 y 15 dígitos')
+    return
+  }
+
+  if (!shipping.billingSameAsShipping) {
+    if (
+      !shipping.billingName.trim() ||
+      !shipping.billingAddress.trim() ||
+      !/^\d{5}$/.test(shipping.billingPostalCode)
+    ) {
+      setError('Completa los datos de facturación')
       return
     }
-
-    if (!shipping.billingSameAsShipping) {
-      if (!shipping.billingName.trim() || !shipping.billingAddress.trim() || !/^\d{5}$/.test(shipping.billingPostalCode)) {
-        setError('Completa los datos de facturación')
-        return
-      }
-    }
-
-    navigate('/checkout/payment-method')
   }
+
+  navigate('/checkout/payment-method')
+}
 
   return (
     <section className="checkout-page">

@@ -79,7 +79,7 @@ function CheckoutReview({ cart, clearCart }) {
         {cart.map((item) => (
           <div key={item.id} className="cart-item checkout-cart-item">
             <div>
-              <h4>{item.name}</h4>
+              <h4>{"Inyector X-56 (solenoide) adaptable"}</h4>
               <p>Cantidad: {item.quantity}</p>
             </div>
             <strong>{(item.quantity * item.price).toFixed(2)} €</strong>

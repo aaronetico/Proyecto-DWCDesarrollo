@@ -27,7 +27,7 @@ function Cart({ cart, removeFromCart }) {
             {cart.map((item) => (
               <div key={item.id} className="cart-item checkout-cart-item">
                 <div>
-                  <h4>{item.name}</h4>
+                  <h4>{"Inyector X-56 (solenoide) adaptable"}</h4>
                   <p>{item.price.toFixed(2)} € · Cantidad: {item.quantity}</p>
                 </div>
                 <div className="cart-item-actions">
