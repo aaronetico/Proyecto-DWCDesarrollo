@@ -13,12 +13,13 @@ function normalizeCollection(payload) {
   if (Array.isArray(payload?.data)) return payload.data
   return []
 }
-
+//
 async function requestJson(url, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...(options.headers ?? {}) }
   const token = getAuthToken()
   if (token) headers.Authorization = `Bearer ${token}`
-
+//Este fetch es que envía el token al servidor y cuando recide la respuesta de ok o no
+//Decide si te da un error y si te lleva al sitio correcto.
   const response = await fetch(url, { ...options, headers })
   if (!response.ok) {
     let details = ''

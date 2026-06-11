@@ -43,7 +43,7 @@ function ProductDetail({ addToCart }) {
 
       <div className="product-detail-hero">
         <div className="product-detail-media">
-          <img src={"/assets/parts/signo-interrogacion.avif"} alt={product.name} className="product-detail-image" />
+          <img src={"/assets/parts/colector.jpg"} alt={product.name} className="product-detail-image" />
           <div className="product-detail-badges">
             <span className="product-badge">Pieza verificada</span>
             <span className="product-badge">Motor JDM / OEM</span>
@@ -95,7 +95,7 @@ function ProductDetail({ addToCart }) {
       <div className="product-detail-bottom">
         <article className="product-detail-description">
           <h3>Descripción del producto</h3>
-          <p>{product.description}</p>
+          <p>{"Es el inyector más extendido en motores de gasolina y también en muchos diésel desde que llegó la electrónica. Utiliza una electroválvula de solenoide, que es básicamente una bobina que al ser energizada crea un campo magnético que levanta una aguja o balín que abre el paso de combustible. Cuando la corriente cesa, un resorte cierra de nuevo el inyector. La ECU del motor controla estos pulsos eléctricos para abrir el inyector en el momento exacto y durante milisegundos precisos. Los inyectores solenoide permiten un control mucho más exacto de la cantidad de combustible que se inyecta, comparado con los mecánicos."}</p>
         </article>
 
         <aside className="product-detail-info-grid">
